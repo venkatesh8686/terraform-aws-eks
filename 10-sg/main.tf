@@ -85,6 +85,14 @@ resource "aws_security_group_rule" "eks_control_plane_node" {
   source_security_group_id =  module.node_sg.id
   security_group_id = module.eks_control_plane_sg.id
 }
+resource "aws_security_group_rule" "eks_control_plane_bastion" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  source_security_group_id =  module.bastion_sg.id
+  security_group_id = module.eks_control_plane_sg.id
+}
 
 resource "aws_security_group_rule" "node_vpc" {
   type              = "ingress"
@@ -99,7 +107,7 @@ resource "aws_security_group_rule" "node_bastion" {
   type              = "ingress"
   from_port         = 22
   to_port           = 22
-  protocol          = "SSH"
+  protocol          = "tcp"
   source_security_group_id =  module.bastion_sg.id
   security_group_id = module.node_sg.id
 }
